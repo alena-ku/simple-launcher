@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class NerdLauncherFragment extends Fragment {
@@ -47,6 +49,16 @@ public class NerdLauncherFragment extends Fragment {
         PackageManager packageManager = getActivity().getPackageManager();
         List<ResolveInfo> activities = packageManager
                 .queryIntentActivities(startupIntent, 0);
+
+        Collections.sort(activities, new Comparator<ResolveInfo>() {
+            @Override
+            public int compare(ResolveInfo o1, ResolveInfo o2) {
+                PackageManager packageManager1 = getActivity().getPackageManager();
+                return String.CASE_INSENSITIVE_ORDER.compare(
+                        o1.loadLabel(packageManager1).toString(),
+                        o2.loadLabel(packageManager1).toString());
+            }
+        });
 
         Log.i(TAG, "Found " + activities.size() + " activities.");
     }
